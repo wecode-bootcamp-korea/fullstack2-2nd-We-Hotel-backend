@@ -1,0 +1,40 @@
+{
+  "name": "fullstack2-2nd-Daily-Hobby-backend",
+  "version": "1.0.0",
+  "description": "데하",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --exec babel-node ./src/server.js",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wecode-bootcamp-korea/fullstack2-2nd-Daily-Hobby-backend.git"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.15.8",
+    "@babel/node": "^7.15.8",
+    "@babel/preset-env": "^7.15.8",
+    "dotenv": "^10.0.0",
+    "eslint": "^8.1.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "nodemon": "^2.0.14",
+    "prettier": "2.4.1",
+    "prisma": "^3.3.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^3.3.0",
+    "@types/jest": "^27.0.2",
+    "babel-jest": "^27.3.1",
+    "bcrypt": "^5.0.1",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "prettier-plugin-prisma": "^3.3.0"
+  }
+}
