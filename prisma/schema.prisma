@@ -9,3 +9,189 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+
+model category {
+  id           Int            @id @default(autoincrement())
+  name         String
+  accomodation accomodation[]
+
+  @@map("categories")
+}
+
+model accomodation {
+  id            Int      @id @default(autoincrement())
+  name          String
+  grade         String
+  categoryId    Int      @map("category_id")
+  detailAddress String   @map("detail_address")
+  createdAt     DateTime @default(now()) @map("created_at")
+  townId        Int      @map("town_id")
+
+  category category @relation(fields: [categoryId], references: [id])
+  @@map("accomodations")
+}
+
+model city {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  @@map("cities")
+}
+
+model town {
+  id     Int    @id @default(autoincrement())
+  name   String
+  cityId Int    @map("city_id")
+
+  @@map("towns")
+}
+
+model discountedType {
+  id         Int    @id @default(autoincrement())
+  percentage Int
+  type       String @db.VarChar(2000)
+
+  @@map("discounted_types")
+}
+
+model roomsDiscountedType {
+  id                 Int @id @default(autoincrement())
+  discounted_type_id Int @map("discounted_type_id")
+  roomsId            Int @map("rooms_id")
+
+  @@map("rooms_discounted_types")
+}
+
+model accomodationsImage {
+  id             Int    @id @default(autoincrement())
+  imageUrl       String @map("image_url") @db.VarChar(2000)
+  accomodationId Int    @map("accomodation_id")
+
+  @@map("accomodations_images")
+}
+
+model roomImage {
+  id        Int    @id @default(autoincrement())
+  image_url String @map("imageUrl") @db.VarChar(2000)
+  roomId    Int    @map("room_id")
+  name      String
+
+  @@map("room_images")
+}
+
+model roomGrade {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  @@map("room_grades")
+}
+
+model room {
+  id             Int     @id @default(autoincrement())
+  name           String
+  roomGradeId    Int     @map("room_grade_id")
+  bedTypeId      Int     @map("bed_type_id")
+  standardPeople Int     @map("standard_people")
+  maxPeople      Int     @map("max_people")
+  etc            String
+  price          Decimal @db.Decimal(8, 0)
+  accomodationId Int     @map("accomodation_id")
+  isReserved     Int     @map("is_reserved") @db.TinyInt
+
+  @@map("rooms")
+}
+
+model bedType {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  @@map("bed_types")
+}
+
+model reservation {
+  id           Int       @id @default(autoincrement())
+  userId       Int       @map("user_id")
+  roomId       Int       @map("room_id")
+  startDate    DateTime  @default(now()) @map("start_date")
+  endDate      DateTime? @map("end_date")
+  personnel    Int
+  byCar        Boolean   @default(false) @map("by_car")
+  policyAgreed Boolean   @map("policy_agreed") @db.TinyInt
+  totalPrice   Decimal   @map("total_price") @db.Decimal(8, 0)
+  isAdult      Int       @map("is_adult") @db.TinyInt
+
+  @@map("reservations")
+}
+
+model guest {
+  id               Int    @id @default(autoincrement())
+  guestName        String @map("guest_name")
+  guestPhoneNumber String @map("guest_phone_number")
+  guestEmail       String @map("guest_email")
+  reservationId    Int    @map("reservation_id")
+
+  @@map("guests")
+}
+
+model review {
+  id            Int       @id @default(autoincrement())
+  scores        Decimal   @db.Decimal(1, 1)
+  reviewContent String    @map("review_content")
+  userId        Int       @map("user_id")
+  reservationId Int       @map("reservation_id")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime? @map("updated_at")
+  deletedAt     DateTime  @map("deleted_at")
+  isDeleted     Int       @map("is_deleted") @db.TinyInt
+
+  @@map("reviews")
+}
+
+model reviewImage {
+  id       Int    @id @default(autoincrement())
+  imageUrl String @map("image_url") @db.VarChar(2000)
+  reviewId Int    @map("review_Id")
+
+  @@map("review_images")
+}
+
+model user {
+  id           Int       @id @default(autoincrement())
+  nickname     String
+  email        String
+  phoneNumber  String    @map("phone_number")
+  socialId     String    @map("sosial_id")
+  policyAgreed Int       @map("policy_agreed") @db.TinyInt
+  birthday     DateTime
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime? @map("updated_at")
+  deletedAt    DateTime  @map("deleted_at")
+  isDeleted    Int       @map("is_deleted") @db.TinyInt
+
+  @@map("users")
+}
+
+model host {
+  id             Int    @id @default(autoincrement())
+  email          String
+  password       String
+  accomodationId Int    @map("accomodation_id")
+
+  @@map("hosts")
+}
+
+model like {
+  id             Int @id @default(autoincrement())
+  userId         Int @unique @map("user_id")
+  accomodationId Int @unique @map("accomodation_id")
+
+  @@map("likes")
+}
+
+model clickedAccomodation {
+  id             Int @id @default(autoincrement())
+  userId         Int @map("user_id")
+  accomodationId Int @map("accomodation_id")
+
+  @@map("clicked_accomodations")
+}

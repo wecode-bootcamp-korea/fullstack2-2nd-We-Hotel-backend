@@ -1,5 +1,5 @@
 {
-  "name": "fullstack2-2nd-Daily-Hobby-backend",
+  "name": "fullstack2-2nd-We-Hotel-backend",
   "version": "1.0.0",
   "description": "데하",
   "main": "index.js",
@@ -12,7 +12,7 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wecode-bootcamp-korea/fullstack2-2nd-Daily-Hobby-backend.git"
+    "url": "git+https://github.com/wecode-bootcamp-korea/fullstack2-2nd-We-Hotel-backend.git"
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",
