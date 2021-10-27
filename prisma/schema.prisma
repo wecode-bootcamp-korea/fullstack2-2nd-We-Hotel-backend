@@ -5,20 +5,21 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
-
 generator client {
   provider = "prisma-client-js"
 }
 
-model category {
+
+model Category {
   id           Int            @id @default(autoincrement())
   name         String
-  accomodation accomodation[]
+
+  accomodation Accomodation[]
 
   @@map("categories")
 }
 
-model accomodation {
+model Accomodation {
   id            Int      @id @default(autoincrement())
   name          String
   grade         String
@@ -27,66 +28,92 @@ model accomodation {
   createdAt     DateTime @default(now()) @map("created_at")
   townId        Int      @map("town_id")
 
-  category category @relation(fields: [categoryId], references: [id])
+  host Host[]
+  accomodationImage AccomodationsImage[]
+  like Like[]
+  clickAccomodation ClickedAccomodation[]
+  room Room[]
+
+  town Town @relation(fields: [townId], references: [id])
+  category Category @relation(fields: [categoryId], references: [id])
+
   @@map("accomodations")
 }
 
-model city {
+model City {
   id   Int    @id @default(autoincrement())
   name String
+
+  town Town[]
 
   @@map("cities")
 }
 
-model town {
+model Town {
   id     Int    @id @default(autoincrement())
   name   String
   cityId Int    @map("city_id")
 
+  accomcdation Accomodation[]
+
+  city City @relation(fields: [cityId], references: [id])
+
   @@map("towns")
 }
 
-model discountedType {
+model DiscountedType {
   id         Int    @id @default(autoincrement())
   percentage Int
   type       String @db.VarChar(2000)
+  
+  roomsDiscountedType RoomsDiscountedType[]
 
   @@map("discounted_types")
 }
 
-model roomsDiscountedType {
-  id                 Int @id @default(autoincrement())
-  discounted_type_id Int @map("discounted_type_id")
-  roomsId            Int @map("rooms_id")
+model RoomsDiscountedType {
+  id                Int @id @default(autoincrement())
+  discountedTypeId  Int @map("discounted_type_id")
+  roomId            Int @map("room_id")
 
-  @@map("rooms_discounted_types")
+  discountedType DiscountedType @relation(fields: [discountedTypeId], references: [id])
+  room Room @relation(fields: [roomId], references: [id])
+
+  @@map("room_discounted_types")
 }
 
-model accomodationsImage {
+model AccomodationsImage {
   id             Int    @id @default(autoincrement())
   imageUrl       String @map("image_url") @db.VarChar(2000)
   accomodationId Int    @map("accomodation_id")
 
+  accomodation Accomodation @relation(fields: [accomodationId], references: [id])
+
   @@map("accomodations_images")
 }
 
-model roomImage {
+model RoomImage {
   id        Int    @id @default(autoincrement())
-  image_url String @map("imageUrl") @db.VarChar(2000)
+  imageUrl  String @map("image_url") @db.VarChar(2000)
   roomId    Int    @map("room_id")
   name      String
+
+  room Room @relation(fields: [roomId], references: [id])
 
   @@map("room_images")
 }
 
-model roomGrade {
-  id   Int    @id @default(autoincrement())
-  name String
+model RoomGrade {
+  id     Int    @id @default(autoincrement())
+  name   String
+  roomId Int @map("room_id")
+
+  room Room @relation(fields: [roomId], references: [id])
 
   @@map("room_grades")
 }
 
-model room {
+model Room {
   id             Int     @id @default(autoincrement())
   name           String
   roomGradeId    Int     @map("room_grade_id")
@@ -98,17 +125,28 @@ model room {
   accomodationId Int     @map("accomodation_id")
   isReserved     Int     @map("is_reserved") @db.TinyInt
 
+  reservation Reservation[]
+  roomGrade RoomGrade[]
+  roomImage RoomImage[]
+  bedType BedType[]
+  roomsDiscountedType RoomsDiscountedType[]
+
+  accomodation Accomodation @relation(fields: [accomodationId], references: [id])
+  
   @@map("rooms")
 }
 
-model bedType {
-  id   Int    @id @default(autoincrement())
-  name String
+model BedType {
+  id     Int    @id @default(autoincrement())
+  name   String
+  roomId Int @map("room_id")
+
+  room Room @relation(fields: [roomId], references: [id])
 
   @@map("bed_types")
 }
 
-model reservation {
+model Reservation {
   id           Int       @id @default(autoincrement())
   userId       Int       @map("user_id")
   roomId       Int       @map("room_id")
@@ -120,20 +158,29 @@ model reservation {
   totalPrice   Decimal   @map("total_price") @db.Decimal(8, 0)
   isAdult      Int       @map("is_adult") @db.TinyInt
 
+  guest Guest[]
+  review Review[]
+
+  user User @relation(fields: [userId], references: [id])
+  room Room @relation(fields: [roomId], references: [id])
+  
   @@map("reservations")
 }
 
-model guest {
+model Guest {
   id               Int    @id @default(autoincrement())
   guestName        String @map("guest_name")
   guestPhoneNumber String @map("guest_phone_number")
   guestEmail       String @map("guest_email")
   reservationId    Int    @map("reservation_id")
 
+
+  reservation Reservation @relation(fields: [reservationId], references: [id])
+
   @@map("guests")
 }
 
-model review {
+model Review {
   id            Int       @id @default(autoincrement())
   scores        Decimal   @db.Decimal(1, 1)
   reviewContent String    @map("review_content")
@@ -144,18 +191,25 @@ model review {
   deletedAt     DateTime  @map("deleted_at")
   isDeleted     Int       @map("is_deleted") @db.TinyInt
 
+  reviewImage ReviewImage[]
+
+  user User @relation(fields: [userId], references:[id])
+  reservation Reservation @relation(fields: [reservationId], references:[id])
+
   @@map("reviews")
 }
 
-model reviewImage {
+model ReviewImage {
   id       Int    @id @default(autoincrement())
   imageUrl String @map("image_url") @db.VarChar(2000)
   reviewId Int    @map("review_Id")
 
+  review Review @relation(fields: [reviewId], references: [id])
+
   @@map("review_images")
 }
 
-model user {
+model User {
   id           Int       @id @default(autoincrement())
   nickname     String
   email        String
@@ -168,30 +222,43 @@ model user {
   deletedAt    DateTime  @map("deleted_at")
   isDeleted    Int       @map("is_deleted") @db.TinyInt
 
+  like Like[]
+  review Review[]
+  reservation Reservation[]
+  clickedAccomodation ClickedAccomodation[]
+
   @@map("users")
 }
 
-model host {
+model Host {
   id             Int    @id @default(autoincrement())
   email          String
   password       String
   accomodationId Int    @map("accomodation_id")
 
+  accomodation Accomodation @relation(fields: [accomodationId], references: [id])
+
   @@map("hosts")
 }
 
-model like {
+model Like {
   id             Int @id @default(autoincrement())
   userId         Int @unique @map("user_id")
   accomodationId Int @unique @map("accomodation_id")
 
+  user User @relation(fields: [userId], references: [id])
+  accomodation Accomodation @relation(fields: [accomodationId], references: [id])
+  
   @@map("likes")
 }
 
-model clickedAccomodation {
+model ClickedAccomodation {
   id             Int @id @default(autoincrement())
   userId         Int @map("user_id")
   accomodationId Int @map("accomodation_id")
+
+  user User @relation(fields: [userId], references: [id])
+  accomodation Accomodation @relation(fields: [accomodationId], references: [id])
 
   @@map("clicked_accomodations")
 }
