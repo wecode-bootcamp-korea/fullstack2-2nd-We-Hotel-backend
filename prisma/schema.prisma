@@ -5,21 +5,21 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
 generator client {
   provider = "prisma-client-js"
 }
 
-
 model Category {
-  id           Int            @id @default(autoincrement())
-  name         String
+  id   Int    @id @default(autoincrement())
+  name String
 
-  accomodation Accomodation[]
+  accommodation Accommodation[]
 
   @@map("categories")
 }
 
-model Accomodation {
+model Accommodation {
   id            Int      @id @default(autoincrement())
   name          String
   grade         String
@@ -28,16 +28,16 @@ model Accomodation {
   createdAt     DateTime @default(now()) @map("created_at")
   townId        Int      @map("town_id")
 
-  host Host[]
-  accomodationImage AccomodationsImage[]
-  like Like[]
-  clickAccomodation ClickedAccomodation[]
-  room Room[]
+  host               Host[]
+  accommodationImage AccommodationsImage[]
+  like               Like[]
+  clickAccommodation ClickedAccommodation[]
+  room               Room[]
 
-  town Town @relation(fields: [townId], references: [id])
+  town     Town     @relation(fields: [townId], references: [id])
   category Category @relation(fields: [categoryId], references: [id])
 
-  @@map("accomodations")
+  @@map("accommodations")
 }
 
 model City {
@@ -54,7 +54,7 @@ model Town {
   name   String
   cityId Int    @map("city_id")
 
-  accomcdation Accomodation[]
+  accommcdation Accommodation[]
 
   city City @relation(fields: [cityId], references: [id])
 
@@ -65,38 +65,38 @@ model DiscountedType {
   id         Int    @id @default(autoincrement())
   percentage Int
   type       String @db.VarChar(2000)
-  
+
   roomsDiscountedType RoomsDiscountedType[]
 
   @@map("discounted_types")
 }
 
 model RoomsDiscountedType {
-  id                Int @id @default(autoincrement())
-  discountedTypeId  Int @map("discounted_type_id")
-  roomId            Int @map("room_id")
+  id               Int @id @default(autoincrement())
+  discountedTypeId Int @map("discounted_type_id")
+  roomId           Int @map("room_id")
 
   discountedType DiscountedType @relation(fields: [discountedTypeId], references: [id])
-  room Room @relation(fields: [roomId], references: [id])
+  room           Room           @relation(fields: [roomId], references: [id])
 
   @@map("room_discounted_types")
 }
 
-model AccomodationsImage {
-  id             Int    @id @default(autoincrement())
-  imageUrl       String @map("image_url") @db.VarChar(2000)
-  accomodationId Int    @map("accomodation_id")
+model AccommodationsImage {
+  id              Int    @id @default(autoincrement())
+  imageUrl        String @map("image_url") @db.VarChar(2000)
+  accommodationId Int    @map("accommodation_id")
 
-  accomodation Accomodation @relation(fields: [accomodationId], references: [id])
+  accommodation Accommodation @relation(fields: [accommodationId], references: [id])
 
-  @@map("accomodations_images")
+  @@map("accommodations_images")
 }
 
 model RoomImage {
-  id        Int    @id @default(autoincrement())
-  imageUrl  String @map("image_url") @db.VarChar(2000)
-  roomId    Int    @map("room_id")
-  name      String
+  id       Int    @id @default(autoincrement())
+  imageUrl String @map("image_url") @db.VarChar(2000)
+  roomId   Int    @map("room_id")
+  name     String
 
   room Room @relation(fields: [roomId], references: [id])
 
@@ -106,7 +106,7 @@ model RoomImage {
 model RoomGrade {
   id     Int    @id @default(autoincrement())
   name   String
-  roomId Int @map("room_id")
+  roomId Int    @map("room_id")
 
   room Room @relation(fields: [roomId], references: [id])
 
@@ -114,32 +114,32 @@ model RoomGrade {
 }
 
 model Room {
-  id             Int     @id @default(autoincrement())
-  name           String
-  roomGradeId    Int     @map("room_grade_id")
-  bedTypeId      Int     @map("bed_type_id")
-  standardPeople Int     @map("standard_people")
-  maxPeople      Int     @map("max_people")
-  etc            String
-  price          Decimal @db.Decimal(8, 0)
-  accomodationId Int     @map("accomodation_id")
-  isReserved     Int     @map("is_reserved") @db.TinyInt
+  id              Int     @id @default(autoincrement())
+  name            String
+  roomGradeId     Int     @map("room_grade_id")
+  bedTypeId       Int     @map("bed_type_id")
+  standardPeople  Int     @map("standard_people")
+  maxPeople       Int     @map("max_people")
+  etc             String
+  price           Decimal @db.Decimal(8, 0)
+  accommodationId Int     @map("accommodation_id")
+  isReserved      Int     @map("is_reserved") @db.TinyInt
 
-  reservation Reservation[]
-  roomGrade RoomGrade[]
-  roomImage RoomImage[]
-  bedType BedType[]
+  reservation         Reservation[]
+  roomGrade           RoomGrade[]
+  roomImage           RoomImage[]
+  bedType             BedType[]
   roomsDiscountedType RoomsDiscountedType[]
 
-  accomodation Accomodation @relation(fields: [accomodationId], references: [id])
-  
+  accommodation Accommodation @relation(fields: [accommodationId], references: [id])
+
   @@map("rooms")
 }
 
 model BedType {
   id     Int    @id @default(autoincrement())
   name   String
-  roomId Int @map("room_id")
+  roomId Int    @map("room_id")
 
   room Room @relation(fields: [roomId], references: [id])
 
@@ -158,12 +158,12 @@ model Reservation {
   totalPrice   Decimal   @map("total_price") @db.Decimal(8, 0)
   isAdult      Int       @map("is_adult") @db.TinyInt
 
-  guest Guest[]
+  guest  Guest[]
   review Review[]
 
   user User @relation(fields: [userId], references: [id])
   room Room @relation(fields: [roomId], references: [id])
-  
+
   @@map("reservations")
 }
 
@@ -193,8 +193,8 @@ model Review {
 
   reviewImage ReviewImage[]
 
-  user User @relation(fields: [userId], references:[id])
-  reservation Reservation @relation(fields: [reservationId], references:[id])
+  user        User        @relation(fields: [userId], references: [id])
+  reservation Reservation @relation(fields: [reservationId], references: [id])
 
   @@map("reviews")
 }
@@ -222,43 +222,43 @@ model User {
   deletedAt    DateTime  @map("deleted_at")
   isDeleted    Int       @map("is_deleted") @db.TinyInt
 
-  like Like[]
-  review Review[]
-  reservation Reservation[]
-  clickedAccomodation ClickedAccomodation[]
+  like                 Like[]
+  review               Review[]
+  reservation          Reservation[]
+  clickedAccommodation ClickedAccommodation[]
 
   @@map("users")
 }
 
 model Host {
-  id             Int    @id @default(autoincrement())
-  email          String
-  password       String
-  accomodationId Int    @map("accomodation_id")
+  id              Int    @id @default(autoincrement())
+  email           String
+  password        String
+  accommodationId Int    @map("accommodation_id")
 
-  accomodation Accomodation @relation(fields: [accomodationId], references: [id])
+  accommodation Accommodation @relation(fields: [accommodationId], references: [id])
 
   @@map("hosts")
 }
 
 model Like {
-  id             Int @id @default(autoincrement())
-  userId         Int @unique @map("user_id")
-  accomodationId Int @unique @map("accomodation_id")
+  id              Int @id @default(autoincrement())
+  userId          Int @unique @map("user_id")
+  accommodationId Int @unique @map("accommodation_id")
 
-  user User @relation(fields: [userId], references: [id])
-  accomodation Accomodation @relation(fields: [accomodationId], references: [id])
-  
+  user          User          @relation(fields: [userId], references: [id])
+  accommodation Accommodation @relation(fields: [accommodationId], references: [id])
+
   @@map("likes")
 }
 
-model ClickedAccomodation {
-  id             Int @id @default(autoincrement())
-  userId         Int @map("user_id")
-  accomodationId Int @map("accomodation_id")
+model ClickedAccommodation {
+  id              Int @id @default(autoincrement())
+  userId          Int @map("user_id")
+  accommodationId Int @map("accommodation_id")
 
-  user User @relation(fields: [userId], references: [id])
-  accomodation Accomodation @relation(fields: [accomodationId], references: [id])
+  user          User          @relation(fields: [userId], references: [id])
+  accommodation Accommodation @relation(fields: [accommodationId], references: [id])
 
-  @@map("clicked_accomodations")
+  @@map("clicked_accommodations")
 }

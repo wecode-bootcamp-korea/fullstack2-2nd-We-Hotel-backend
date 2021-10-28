@@ -7,7 +7,7 @@ CREATE TABLE `categories` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `accomodations` (
+CREATE TABLE `accommodations` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
     `grade` VARCHAR(191) NOT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE `room_discounted_types` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `accomodations_images` (
+CREATE TABLE `accommodations_images` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `image_url` VARCHAR(2000) NOT NULL,
     `accomodation_id` INTEGER NOT NULL,
@@ -197,7 +197,7 @@ CREATE TABLE `likes` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `clicked_accomodations` (
+CREATE TABLE `clicked_accommodations` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `user_id` INTEGER NOT NULL,
     `accomodation_id` INTEGER NOT NULL,
@@ -206,10 +206,10 @@ CREATE TABLE `clicked_accomodations` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
-ALTER TABLE `accomodations` ADD CONSTRAINT `accomodations_town_id_fkey` FOREIGN KEY (`town_id`) REFERENCES `towns`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `accommodations` ADD CONSTRAINT `accommodations_town_id_fkey` FOREIGN KEY (`town_id`) REFERENCES `towns`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `accomodations` ADD CONSTRAINT `accomodations_category_id_fkey` FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `accommodations` ADD CONSTRAINT `accommodations_category_id_fkey` FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `towns` ADD CONSTRAINT `towns_city_id_fkey` FOREIGN KEY (`city_id`) REFERENCES `cities`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -221,7 +221,7 @@ ALTER TABLE `room_discounted_types` ADD CONSTRAINT `room_discounted_types_discou
 ALTER TABLE `room_discounted_types` ADD CONSTRAINT `room_discounted_types_room_id_fkey` FOREIGN KEY (`room_id`) REFERENCES `rooms`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `accomodations_images` ADD CONSTRAINT `accomodations_images_accomodation_id_fkey` FOREIGN KEY (`accomodation_id`) REFERENCES `accomodations`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `accommodations_images` ADD CONSTRAINT `accommodations_images_accomodation_id_fkey` FOREIGN KEY (`accomodation_id`) REFERENCES `accommodations`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `room_images` ADD CONSTRAINT `room_images_room_id_fkey` FOREIGN KEY (`room_id`) REFERENCES `rooms`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -230,7 +230,7 @@ ALTER TABLE `room_images` ADD CONSTRAINT `room_images_room_id_fkey` FOREIGN KEY 
 ALTER TABLE `room_grades` ADD CONSTRAINT `room_grades_room_id_fkey` FOREIGN KEY (`room_id`) REFERENCES `rooms`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `rooms` ADD CONSTRAINT `rooms_accomodation_id_fkey` FOREIGN KEY (`accomodation_id`) REFERENCES `accomodations`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `rooms` ADD CONSTRAINT `rooms_accomodation_id_fkey` FOREIGN KEY (`accomodation_id`) REFERENCES `accommodations`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `bed_types` ADD CONSTRAINT `bed_types_room_id_fkey` FOREIGN KEY (`room_id`) REFERENCES `rooms`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -254,16 +254,16 @@ ALTER TABLE `reviews` ADD CONSTRAINT `reviews_reservation_id_fkey` FOREIGN KEY (
 ALTER TABLE `review_images` ADD CONSTRAINT `review_images_review_Id_fkey` FOREIGN KEY (`review_Id`) REFERENCES `reviews`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `hosts` ADD CONSTRAINT `hosts_accomodation_id_fkey` FOREIGN KEY (`accomodation_id`) REFERENCES `accomodations`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `hosts` ADD CONSTRAINT `hosts_accomodation_id_fkey` FOREIGN KEY (`accomodation_id`) REFERENCES `accommodations`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `likes` ADD CONSTRAINT `likes_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `likes` ADD CONSTRAINT `likes_accomodation_id_fkey` FOREIGN KEY (`accomodation_id`) REFERENCES `accomodations`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `likes` ADD CONSTRAINT `likes_accomodation_id_fkey` FOREIGN KEY (`accomodation_id`) REFERENCES `accommodations`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `clicked_accomodations` ADD CONSTRAINT `clicked_accomodations_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `clicked_accommodations` ADD CONSTRAINT `clicked_accommodations_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `clicked_accomodations` ADD CONSTRAINT `clicked_accomodations_accomodation_id_fkey` FOREIGN KEY (`accomodation_id`) REFERENCES `accomodations`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `clicked_accommodations` ADD CONSTRAINT `clicked_accommodations_accomodation_id_fkey` FOREIGN KEY (`accomodation_id`) REFERENCES `accommodations`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
