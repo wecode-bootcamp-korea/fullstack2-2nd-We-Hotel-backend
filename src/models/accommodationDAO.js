@@ -1,5 +1,4 @@
 import prisma from '../../prisma';
-import { prisma } from '.prisma/client';
 
 const getAccommodationList = async (categoryId) => {
   return await prisma.$queryRaw`
