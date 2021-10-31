@@ -1,29 +1,42 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
+
+model MainCategory {
+  id  Int @id @default(autoincrement())
+  name String
+   
+  subCategory SubCategory[]
+
+  @@map("main_categories")
 }
 
-model Category {
+model SubCategory {
   id   Int    @id @default(autoincrement())
   name String
+  mainCategoryId Int @map("main_category_id")
 
   accommodation Accommodation[]
 
-  @@map("categories")
+  mainCategory MainCategory @relation(fields: [mainCategoryId], references: [id])
+
+  @@map("sub_categories")
 }
 
 model Accommodation {
   id            Int      @id @default(autoincrement())
   name          String
   grade         String
-  categoryId    Int      @map("category_id")
+  subCategoryId    Int      @map("sub_category_id")
   detailAddress String   @map("detail_address")
   createdAt     DateTime @default(now()) @map("created_at")
   townId        Int      @map("town_id")
@@ -35,7 +48,7 @@ model Accommodation {
   room               Room[]
 
   town     Town     @relation(fields: [townId], references: [id])
-  category Category @relation(fields: [categoryId], references: [id])
+  subCategory SubCategory @relation(fields: [subCategoryId], references: [id])
 
   @@map("accommodations")
 }
@@ -152,6 +165,7 @@ model Reservation {
   roomId       Int       @map("room_id")
   startDate    DateTime  @default(now()) @map("start_date")
   endDate      DateTime? @map("end_date")
+  createdAt    DateTime  @default(now()) @map("created_at")
   personnel    Int
   byCar        Boolean   @default(false) @map("by_car")
   policyAgreed Boolean   @map("policy_agreed") @db.TinyInt
@@ -214,8 +228,8 @@ model User {
   nickname     String
   email        String
   phoneNumber  String    @map("phone_number")
-  socialId     String    @map("sosial_id")
-  policyAgreed Int       @map("policy_agreed") @db.TinyInt
+  socialId     String    @map("social_id")
+  policyAgreed Boolean   @map("policy_agreed")
   birthday     DateTime
   createdAt    DateTime  @default(now()) @map("created_at")
   updatedAt    DateTime? @map("updated_at")
