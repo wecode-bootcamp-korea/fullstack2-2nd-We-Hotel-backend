@@ -56,7 +56,6 @@ model City {
   name String
 
   town Town[]
-
   @@map("cities")
 }
 
@@ -66,9 +65,7 @@ model Town {
   cityId Int    @map("city_id")
 
   accommcdation Accommodation[]
-
-  city City @relation(fields: [cityId], references: [id])
-
+  city          City            @relation(fields: [cityId], references: [id])
   @@map("towns")
 }
 
@@ -78,7 +75,6 @@ model DiscountedType {
   type       String @db.VarChar(2000)
 
   roomsDiscountedType RoomsDiscountedType[]
-
   @@map("discounted_types")
 }
 
@@ -89,7 +85,6 @@ model RoomsDiscountedType {
 
   discountedType DiscountedType @relation(fields: [discountedTypeId], references: [id])
   room           Room           @relation(fields: [roomId], references: [id])
-
   @@map("room_discounted_types")
 }
 
@@ -99,7 +94,6 @@ model AccommodationsImage {
   accommodationId Int    @map("accommodation_id")
 
   accommodation Accommodation @relation(fields: [accommodationId], references: [id])
-
   @@map("accommodations_images")
 }
 
@@ -110,7 +104,6 @@ model RoomImage {
   name     String
 
   room Room @relation(fields: [roomId], references: [id])
-
   @@map("room_images")
 }
 
@@ -131,13 +124,12 @@ model Room {
   etc             String
   price           Decimal @db.Decimal(8, 0)
   accommodationId Int     @map("accommodation_id")
-  isReserved      Int     @map("is_reserved") @db.TinyInt
+  isReserved      Boolean @default(false) @map("is_reserved")
 
   reservation         Reservation[]
   roomImage           RoomImage[]
   roomsDiscountedType RoomsDiscountedType[]
-
-  accommodation Accommodation @relation(fields: [accommodationId], references: [id])
+  accommodation       Accommodation         @relation(fields: [accommodationId], references: [id])
 
   @@map("rooms")
 }
@@ -150,24 +142,22 @@ model BedType {
 }
 
 model Reservation {
-  id           Int       @id @default(autoincrement())
-  userId       Int       @map("user_id")
-  roomId       Int       @map("room_id")
-  startDate    DateTime  @default(now()) @map("start_date")
-  endDate      DateTime? @map("end_date")
-  createdAt    DateTime  @default(now()) @map("created_at")
+  id           Int      @id @default(autoincrement())
+  userId       Int      @map("user_id")
+  roomId       Int      @map("room_id")
+  startDate    DateTime @default(now()) @map("start_date")
+  endDate      DateTime @map("end_date")
+  createdAt    DateTime @default(now()) @map("created_at")
   personnel    Int
-  byCar        Boolean   @default(false) @map("by_car")
-  policyAgreed Boolean   @map("policy_agreed") @db.TinyInt
-  totalPrice   Decimal   @map("total_price") @db.Decimal(8, 0)
-  isAdult      Int       @map("is_adult") @db.TinyInt
+  byCar        Boolean  @default(false) @map("by_car")
+  policyAgreed Boolean  @default(true) @map("policy_agreed")
+  totalPrice   Decimal  @map("total_price") @db.Decimal(8, 0)
+  isAdult      Boolean  @default(true) @map("is_adult")
 
   guest  Guest[]
   review Review[]
-
-  user User @relation(fields: [userId], references: [id])
-  room Room @relation(fields: [roomId], references: [id])
-
+  user   User     @relation(fields: [userId], references: [id])
+  room   Room     @relation(fields: [roomId], references: [id])
   @@map("reservations")
 }
 
@@ -178,9 +168,7 @@ model Guest {
   guestEmail       String @map("guest_email")
   reservationId    Int    @map("reservation_id")
 
-
   reservation Reservation @relation(fields: [reservationId], references: [id])
-
   @@map("guests")
 }
 
@@ -192,14 +180,12 @@ model Review {
   reservationId Int       @map("reservation_id")
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime? @map("updated_at")
-  deletedAt     DateTime  @map("deleted_at")
-  isDeleted     Int       @map("is_deleted") @db.TinyInt
+  deletedAt     DateTime? @map("deleted_at")
+  isDeleted     Boolean   @default(false) @map("is_deleted")
 
   reviewImage ReviewImage[]
-
-  user        User        @relation(fields: [userId], references: [id])
-  reservation Reservation @relation(fields: [reservationId], references: [id])
-
+  user        User          @relation(fields: [userId], references: [id])
+  reservation Reservation   @relation(fields: [reservationId], references: [id])
   @@map("reviews")
 }
 
@@ -209,7 +195,6 @@ model ReviewImage {
   reviewId Int    @map("review_Id")
 
   review Review @relation(fields: [reviewId], references: [id])
-
   @@map("review_images")
 }
 
@@ -219,11 +204,12 @@ model User {
   email        String
   phoneNumber  String    @map("phone_number")
   socialId     String    @map("social_id")
-  policyAgreed Boolean   @map("policy_agreed")
+  policyAgreed Boolean   @default(true) @map("policy_agreed")
   birthday     DateTime  @db.Date
   createdAt    DateTime  @default(now()) @map("created_at")
   updatedAt    DateTime? @map("updated_at")
-  deletedAt    DateTime  @map("deleted_at")
+  deletedAt    DateTime? @map("deleted_at")
+  isDeleted    Boolean   @default(false) @map("is_deleted")
 
   like        Like[]
   review      Review[]
@@ -239,17 +225,15 @@ model Host {
   accommodationId Int    @map("accommodation_id")
 
   accommodation Accommodation @relation(fields: [accommodationId], references: [id])
-
   @@map("hosts")
 }
 
 model Like {
   id              Int @id @default(autoincrement())
-  userId          Int @unique @map("user_id")
-  accommodationId Int @unique @map("accommodation_id")
+  userId          Int @map("user_id")
+  accommodationId Int @map("accommodation_id")
 
   user          User          @relation(fields: [userId], references: [id])
   accommodation Accommodation @relation(fields: [accommodationId], references: [id])
-
   @@map("likes")
 }

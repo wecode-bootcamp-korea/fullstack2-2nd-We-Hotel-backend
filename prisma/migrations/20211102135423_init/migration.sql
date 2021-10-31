@@ -1,7 +1,16 @@
 -- CreateTable
-CREATE TABLE `categories` (
+CREATE TABLE `main_categories` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `sub_categories` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(191) NOT NULL,
+    `main_category_id` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -11,7 +20,7 @@ CREATE TABLE `accommodations` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
     `grade` VARCHAR(191) NOT NULL,
-    `category_id` INTEGER NOT NULL,
+    `sub_category_id` INTEGER NOT NULL,
     `detail_address` VARCHAR(191) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `town_id` INTEGER NOT NULL,
@@ -58,7 +67,7 @@ CREATE TABLE `room_discounted_types` (
 CREATE TABLE `accommodations_images` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `image_url` VARCHAR(2000) NOT NULL,
-    `accomodation_id` INTEGER NOT NULL,
+    `accommodation_id` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -77,7 +86,6 @@ CREATE TABLE `room_images` (
 CREATE TABLE `room_grades` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
-    `room_id` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -92,7 +100,7 @@ CREATE TABLE `rooms` (
     `max_people` INTEGER NOT NULL,
     `etc` VARCHAR(191) NOT NULL,
     `price` DECIMAL(8, 0) NOT NULL,
-    `accomodation_id` INTEGER NOT NULL,
+    `accommodation_id` INTEGER NOT NULL,
     `is_reserved` TINYINT NOT NULL,
 
     PRIMARY KEY (`id`)
@@ -102,7 +110,6 @@ CREATE TABLE `rooms` (
 CREATE TABLE `bed_types` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
-    `room_id` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -114,6 +121,7 @@ CREATE TABLE `reservations` (
     `room_id` INTEGER NOT NULL,
     `start_date` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `end_date` DATETIME(3) NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `personnel` INTEGER NOT NULL,
     `by_car` BOOLEAN NOT NULL DEFAULT false,
     `policy_agreed` BOOLEAN NOT NULL,
@@ -164,13 +172,12 @@ CREATE TABLE `users` (
     `nickname` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
     `phone_number` VARCHAR(191) NOT NULL,
-    `sosial_id` VARCHAR(191) NOT NULL,
-    `policy_agreed` TINYINT NOT NULL,
-    `birthday` DATETIME(3) NOT NULL,
+    `social_id` VARCHAR(191) NOT NULL,
+    `policy_agreed` BOOLEAN NOT NULL,
+    `birthday` DATE NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NULL,
     `deleted_at` DATETIME(3) NOT NULL,
-    `is_deleted` TINYINT NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -180,7 +187,7 @@ CREATE TABLE `hosts` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `email` VARCHAR(191) NOT NULL,
     `password` VARCHAR(191) NOT NULL,
-    `accomodation_id` INTEGER NOT NULL,
+    `accommodation_id` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -189,27 +196,21 @@ CREATE TABLE `hosts` (
 CREATE TABLE `likes` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `user_id` INTEGER NOT NULL,
-    `accomodation_id` INTEGER NOT NULL,
+    `accommodation_id` INTEGER NOT NULL,
 
     UNIQUE INDEX `likes_user_id_key`(`user_id`),
-    UNIQUE INDEX `likes_accomodation_id_key`(`accomodation_id`),
+    UNIQUE INDEX `likes_accommodation_id_key`(`accommodation_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- CreateTable
-CREATE TABLE `clicked_accommodations` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `user_id` INTEGER NOT NULL,
-    `accomodation_id` INTEGER NOT NULL,
-
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+-- AddForeignKey
+ALTER TABLE `sub_categories` ADD CONSTRAINT `sub_categories_main_category_id_fkey` FOREIGN KEY (`main_category_id`) REFERENCES `main_categories`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `accommodations` ADD CONSTRAINT `accommodations_town_id_fkey` FOREIGN KEY (`town_id`) REFERENCES `towns`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `accommodations` ADD CONSTRAINT `accommodations_category_id_fkey` FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `accommodations` ADD CONSTRAINT `accommodations_sub_category_id_fkey` FOREIGN KEY (`sub_category_id`) REFERENCES `sub_categories`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `towns` ADD CONSTRAINT `towns_city_id_fkey` FOREIGN KEY (`city_id`) REFERENCES `cities`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -221,19 +222,13 @@ ALTER TABLE `room_discounted_types` ADD CONSTRAINT `room_discounted_types_discou
 ALTER TABLE `room_discounted_types` ADD CONSTRAINT `room_discounted_types_room_id_fkey` FOREIGN KEY (`room_id`) REFERENCES `rooms`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `accommodations_images` ADD CONSTRAINT `accommodations_images_accomodation_id_fkey` FOREIGN KEY (`accomodation_id`) REFERENCES `accommodations`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `accommodations_images` ADD CONSTRAINT `accommodations_images_accommodation_id_fkey` FOREIGN KEY (`accommodation_id`) REFERENCES `accommodations`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `room_images` ADD CONSTRAINT `room_images_room_id_fkey` FOREIGN KEY (`room_id`) REFERENCES `rooms`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `room_grades` ADD CONSTRAINT `room_grades_room_id_fkey` FOREIGN KEY (`room_id`) REFERENCES `rooms`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `rooms` ADD CONSTRAINT `rooms_accomodation_id_fkey` FOREIGN KEY (`accomodation_id`) REFERENCES `accommodations`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `bed_types` ADD CONSTRAINT `bed_types_room_id_fkey` FOREIGN KEY (`room_id`) REFERENCES `rooms`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `rooms` ADD CONSTRAINT `rooms_accommodation_id_fkey` FOREIGN KEY (`accommodation_id`) REFERENCES `accommodations`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `reservations` ADD CONSTRAINT `reservations_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -254,16 +249,10 @@ ALTER TABLE `reviews` ADD CONSTRAINT `reviews_reservation_id_fkey` FOREIGN KEY (
 ALTER TABLE `review_images` ADD CONSTRAINT `review_images_review_Id_fkey` FOREIGN KEY (`review_Id`) REFERENCES `reviews`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `hosts` ADD CONSTRAINT `hosts_accomodation_id_fkey` FOREIGN KEY (`accomodation_id`) REFERENCES `accommodations`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `hosts` ADD CONSTRAINT `hosts_accommodation_id_fkey` FOREIGN KEY (`accommodation_id`) REFERENCES `accommodations`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `likes` ADD CONSTRAINT `likes_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `likes` ADD CONSTRAINT `likes_accomodation_id_fkey` FOREIGN KEY (`accomodation_id`) REFERENCES `accommodations`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `clicked_accommodations` ADD CONSTRAINT `clicked_accommodations_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `clicked_accommodations` ADD CONSTRAINT `clicked_accommodations_accomodation_id_fkey` FOREIGN KEY (`accomodation_id`) REFERENCES `accommodations`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `likes` ADD CONSTRAINT `likes_accommodation_id_fkey` FOREIGN KEY (`accommodation_id`) REFERENCES `accommodations`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
