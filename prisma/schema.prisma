@@ -137,7 +137,6 @@ model Room {
   reservation         Reservation[]
   roomImage           RoomImage[]
   roomsDiscountedType RoomsDiscountedType[]
-  roomStock           RoomStock[]
 
   accommodation Accommodation @relation(fields: [accommodationId], references: [id])
 
@@ -255,46 +254,4 @@ model Like {
   accommodation Accommodation @relation(fields: [accommodationId], references: [id])
 
   @@map("likes")
-}
-
-model Stock {
-  id              Int @id @default(autoincrement())
-  isAvailable     Boolean @map("is_available") @db.TinyInt
-
-  roomStock   RoomStock[]
-  reservedDate ReservedDate[]
-
-  @@map("stocks")
-}
-
-model RoomStock {
-  id Int @id @default(autoincrement())
-  stockId Int @map("stocks_id")
-  roomId Int @map("rooms_id")
-    
-  stock Stock @relation(fields: [stockId], references: [id])
-  room Room @relation(fields: [roomId], references: [id])
-
-  @@map("rooms_stocks")
-}
-
-model ReservedDate {
-  id Int @id @default(autoincrement())
-  stockId Int @map("stocks_id")
-  dateId Int @map("dates_id")
-
-  stock Stock @relation(fields: [stockId], references: [id])
-  date  Date  @relation(fields: [dateId], references: [id])
-
-
-  @@map("reserved_dates")
-}
-
-model Date {
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(2000)
-
-
-  reservedDate  ReservedDate[]
-  @@map("dates")
 }
