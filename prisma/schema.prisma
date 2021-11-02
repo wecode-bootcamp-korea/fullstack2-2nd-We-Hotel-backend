@@ -10,20 +10,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model MainCategory {
-  id  Int @id @default(autoincrement())
+  id   Int    @id @default(autoincrement())
   name String
-   
+
   subCategory SubCategory[]
 
   @@map("main_categories")
 }
 
 model SubCategory {
-  id   Int    @id @default(autoincrement())
-  name String
-  mainCategoryId Int @map("main_category_id")
+  id             Int    @id @default(autoincrement())
+  name           String
+  mainCategoryId Int    @map("main_category_id")
 
   accommodation Accommodation[]
 
@@ -36,7 +35,7 @@ model Accommodation {
   id            Int      @id @default(autoincrement())
   name          String
   grade         String
-  subCategoryId    Int      @map("sub_category_id")
+  subCategoryId Int      @map("sub_category_id")
   detailAddress String   @map("detail_address")
   createdAt     DateTime @default(now()) @map("created_at")
   townId        Int      @map("town_id")
@@ -46,7 +45,7 @@ model Accommodation {
   like               Like[]
   room               Room[]
 
-  town     Town     @relation(fields: [townId], references: [id])
+  town        Town        @relation(fields: [townId], references: [id])
   subCategory SubCategory @relation(fields: [subCategoryId], references: [id])
 
   @@map("accommodations")
@@ -116,8 +115,8 @@ model RoomImage {
 }
 
 model RoomGrade {
-  id     Int    @id @default(autoincrement())
-  name   String
+  id   Int    @id @default(autoincrement())
+  name String
 
   @@map("room_grades")
 }
@@ -144,8 +143,8 @@ model Room {
 }
 
 model BedType {
-  id     Int    @id @default(autoincrement())
-  name   String
+  id   Int    @id @default(autoincrement())
+  name String
 
   @@map("bed_types")
 }
@@ -221,15 +220,14 @@ model User {
   phoneNumber  String    @map("phone_number")
   socialId     String    @map("social_id")
   policyAgreed Boolean   @map("policy_agreed")
-  birthday     DateTime
+  birthday     DateTime  @db.Date
   createdAt    DateTime  @default(now()) @map("created_at")
   updatedAt    DateTime? @map("updated_at")
   deletedAt    DateTime  @map("deleted_at")
-  isDeleted    Int       @map("is_deleted") @db.TinyInt
 
-  like                 Like[]
-  review               Review[]
-  reservation          Reservation[]
+  like        Like[]
+  review      Review[]
+  reservation Reservation[]
 
   @@map("users")
 }
