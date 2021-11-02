@@ -44,7 +44,6 @@ model Accommodation {
   host               Host[]
   accommodationImage AccommodationsImage[]
   like               Like[]
-  clickAccommodation ClickedAccommodation[]
   room               Room[]
 
   town     Town     @relation(fields: [townId], references: [id])
@@ -138,6 +137,7 @@ model Room {
   reservation         Reservation[]
   roomImage           RoomImage[]
   roomsDiscountedType RoomsDiscountedType[]
+  roomStock           RoomStock[]
 
   accommodation Accommodation @relation(fields: [accommodationId], references: [id])
 
@@ -231,7 +231,6 @@ model User {
   like                 Like[]
   review               Review[]
   reservation          Reservation[]
-  clickedAccommodation ClickedAccommodation[]
 
   @@map("users")
 }
@@ -258,13 +257,44 @@ model Like {
   @@map("likes")
 }
 
-model ClickedAccommodation {
+model Stock {
   id              Int @id @default(autoincrement())
-  userId          Int @map("user_id")
-  accommodationId Int @map("accommodation_id")
+  isAvailable     Boolean @map("is_available") @db.TinyInt
 
-  user          User          @relation(fields: [userId], references: [id])
-  accommodation Accommodation @relation(fields: [accommodationId], references: [id])
+  roomStock   RoomStock[]
+  reservedDate ReservedDate[]
 
-  @@map("clicked_accommodations")
+  @@map("stocks")
+}
+
+model RoomStock {
+  id Int @id @default(autoincrement())
+  stockId Int @map("stocks_id")
+  roomId Int @map("rooms_id")
+    
+  stock Stock @relation(fields: [stockId], references: [id])
+  room Room @relation(fields: [roomId], references: [id])
+
+  @@map("rooms_stocks")
+}
+
+model ReservedDate {
+  id Int @id @default(autoincrement())
+  stockId Int @map("stocks_id")
+  dateId Int @map("dates_id")
+
+  stock Stock @relation(fields: [stockId], references: [id])
+  date  Date  @relation(fields: [dateId], references: [id])
+
+
+  @@map("reserved_dates")
+}
+
+model Date {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(2000)
+
+
+  reservedDate  ReservedDate[]
+  @@map("dates")
 }
