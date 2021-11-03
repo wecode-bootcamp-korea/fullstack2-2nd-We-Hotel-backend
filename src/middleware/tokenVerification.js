@@ -5,7 +5,7 @@ const tokenVerification = asyncWrapper(async (req, res, next) => {
   const token = req.cookies.user.token;
   if (token) {
     const payload = await jwt.verifyToken(token);
-    req.body.userId = payload.id;
+    req.userId = payload.id;
   } else {
     errorGenerator(401, 'INVALID_TOKEN');
   }
