@@ -23,7 +23,8 @@ const findUserByEmail = async email => {
   SELECT
     email
     from users
-  ;`;
+    where email = "${email}"
+;`;
 };
 
 export default { createUser, createUser, findUserByEmail };

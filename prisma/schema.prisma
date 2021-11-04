@@ -40,7 +40,6 @@ model Accommodation {
   createdAt     DateTime @default(now()) @map("created_at")
   townId        Int      @map("town_id")
 
-  host               Host[]
   accommodationImage AccommodationsImage[]
   like               Like[]
   room               Room[]
@@ -147,7 +146,7 @@ model Reservation {
   roomId       Int      @map("room_id")
   startDate    DateTime @map("start_date") @db.Date
   endDate      DateTime @map("end_date") @db.Date
-  createdAt    DateTime @default(now()) @map("created_at") @db.Date
+  createdAt    DateTime @default(now()) @map("created_at")
   personnel    Int
   byCar        Boolean  @default(false) @map("by_car")
   policyAgreed Boolean  @default(true) @map("policy_agreed")
@@ -216,16 +215,6 @@ model User {
   reservation Reservation[]
 
   @@map("users")
-}
-
-model Host {
-  id              Int    @id @default(autoincrement())
-  email           String
-  password        String
-  accommodationId Int    @map("accommodation_id")
-
-  accommodation Accommodation @relation(fields: [accommodationId], references: [id])
-  @@map("hosts")
 }
 
 model Like {
