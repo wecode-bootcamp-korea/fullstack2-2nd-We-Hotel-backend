@@ -4,8 +4,8 @@ const getRoomList = async (accommodationId) => {
   return await prisma.$queryRaw `
   SELECT
     a.id,
-    a.name as roomTitle,
-    r.room_grade_id as roomGradeId,
+    a.name as title,
+    a.grade,
     r.etc,
     r.price,
     r.is_reserved as isReserved,

@@ -15,12 +15,11 @@ const getAccommodationList = async (subcategoryId, userId, accommodationId) => {
   const getTotalAccommodationList = {
     accommodationList,
     accommodationImage,
-    likedAccommodation
+    likedAccommodation,
   };
 
   return getTotalAccommodationList;
 };
-
 
 
 export default {

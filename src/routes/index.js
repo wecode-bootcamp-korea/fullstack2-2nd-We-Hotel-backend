@@ -2,7 +2,7 @@ import express from 'express';
 import categoryRouter from './categoryRouter';
 import accommodationRouter from './accommodationRouter';
 import roomRouter from './roomRouter';
-// import userRouter from './userRouter';
+import userRouter from './userRouter';
 import reviewRouter from './reviewRouter';
 
 const router = express.Router();

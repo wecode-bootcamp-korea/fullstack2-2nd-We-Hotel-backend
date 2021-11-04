@@ -10,7 +10,15 @@ const getAccommodationList = asyncWrapper(async (req, res) => {
     })
 });
 
+const getMainPageAccommodation = asyncWrapper(async (req, res) => {
+    const MainSliderAccommodation = await accommodationService.getMainSliderAccommodation();
+    res.status(200).json({
+        DATA: MainSliderAccommodation,
+    })
+})
+
 
 export default {
     getAccommodationList,
+    getMainPageAccommodation
 }

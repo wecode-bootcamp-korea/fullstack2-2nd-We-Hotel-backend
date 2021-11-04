@@ -11,7 +11,7 @@ const getRoomList = async (accommodationId) => {
 
 const getRoomImage =async () => {
   const roomImage=await roomDAO.getRoomImage();
-  if(!roomImage.length) errorGenerator(404, 'CAN_NOT_FIND_ROOM_IMAGE');
+  if(!roomImage) errorGenerator(404, 'CAN_NOT_FIND_ROOM_IMAGE');
   return roomImage
 }
 export default { getRoomList, getRoomImage };
