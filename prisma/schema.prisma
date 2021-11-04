@@ -173,7 +173,7 @@ model Guest {
 
 model Review {
   id            Int       @id @default(autoincrement())
-  scores        Decimal   @db.Decimal(1, 1)
+  scores        Decimal   @db.Decimal(2, 1)
   reviewContent String    @map("review_content")
   userId        Int       @map("user_id")
   reservationId Int       @map("reservation_id")
