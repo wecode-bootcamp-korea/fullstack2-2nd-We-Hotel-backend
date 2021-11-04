@@ -145,9 +145,9 @@ model Reservation {
   id           Int      @id @default(autoincrement())
   userId       Int      @map("user_id")
   roomId       Int      @map("room_id")
-  startDate    DateTime @default(now()) @map("start_date")
-  endDate      DateTime @map("end_date")
-  createdAt    DateTime @default(now()) @map("created_at")
+  startDate    DateTime @map("start_date") @db.Date
+  endDate      DateTime @map("end_date") @db.Date
+  createdAt    DateTime @default(now()) @map("created_at") @db.Date
   personnel    Int
   byCar        Boolean  @default(false) @map("by_car")
   policyAgreed Boolean  @default(true) @map("policy_agreed")
@@ -203,7 +203,7 @@ model User {
   nickname     String
   email        String
   phoneNumber  String    @map("phone_number")
-  socialId     String    @map("social_id")
+  socialId     String?   @map("social_id")
   policyAgreed Boolean   @default(true) @map("policy_agreed")
   birthday     DateTime  @db.Date
   createdAt    DateTime  @default(now()) @map("created_at")
