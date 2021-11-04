@@ -4,11 +4,4 @@ import roomDAO from './roomDAO';
 import accommodationDAO from './accommodationDAO';
 import categoryDAO from './categoryDAO';
 
-
-export {
-  userDAO,
-  reviewDAO,
-  roomDAO,
-  accommodationDAO,
-  categoryDAO,
-}
+export { userDAO, reviewDAO, roomDAO, accommodationDAO, categoryDAO };

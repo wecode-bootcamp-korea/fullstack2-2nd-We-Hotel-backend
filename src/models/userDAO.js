@@ -1,29 +1,37 @@
-import { prisma, Prisma } from '../../prisma';
+import prisma from '../../prisma';
 
 const createUser = async userInfo => {
-  const { email, nickname, phoneNumber, birthday } = userInfo;
-  return await prisma.$queryRaw`
-  INSERT INTO users VALUES (
-    DEFAULT,
+  const { nickname, email, phoneNumber, birthday } = userInfo;
+
+  await prisma.$queryRaw`
+  INSERT INTO users (nickname, email, phone_number, policy_agreed, birthday, updated_at, deleted_at) VALUES (
     ${nickname},
     ${email},
     ${phoneNumber},
-    social_id,
     true,
     ${birthday},
-    DEFAULT,
     DEFAULT,
     DEFAULT
   )
   ;`;
+  return await prisma.$queryRaw`
+  SELECT 
+    email,
+    nickname
+    from users
+    where email = ${email}
+;`;
 };
 
 const findUserByEmail = async email => {
-  return await prisma.queryRaw`
-  SELECT
-    email
-    from users
-    where email = "${email}"
+  return await prisma.$queryRaw`
+  SELECT 
+    email,
+    nickname
+  FROM
+    users
+  WHERE 
+    email=${email}
 ;`;
 };
 

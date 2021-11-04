@@ -4,8 +4,7 @@
   "description": "데하",
   "main": "index.js",
   "scripts": {
-    "start": "cat .env.development > .env && nodemon --exec babel-node ./src/server.js",
-    "test": "cat .env.test > .env && npx prisma migrate -f && jest"
+    "start": "nodemon --exec babel-node ./src/server.js"
   },
   "keywords": [],
   "author": "",
