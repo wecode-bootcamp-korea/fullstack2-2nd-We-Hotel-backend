@@ -7,7 +7,7 @@ const { PORT } = process.env;
 const start = async () => {
   try {
     app.listen(PORT, () => {
-      console.log(`서버가 ${PORT}번에 열렸어요~`);
+      console.log(`서버가 ${PORT}번에 열렸다!!!!!!!`);
     });
   } catch (error) {
     console.error(error);

@@ -8,7 +8,7 @@ import reviewRouter from './reviewRouter';
 const router = express.Router();
 
 router.use('/review', reviewRouter);
-// router.use('/user', userRouter);
+router.use('/user', userRouter);
 router.use('/category', categoryRouter);
 // router.use('/room', roomRouter);
 router.use('/accommodation', accommodationRouter);

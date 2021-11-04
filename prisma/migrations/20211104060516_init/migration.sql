@@ -101,7 +101,7 @@ CREATE TABLE `rooms` (
     `etc` VARCHAR(191) NOT NULL,
     `price` DECIMAL(8, 0) NOT NULL,
     `accommodation_id` INTEGER NOT NULL,
-    `is_reserved` TINYINT NOT NULL,
+    `is_reserved` BOOLEAN NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -119,14 +119,14 @@ CREATE TABLE `reservations` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `user_id` INTEGER NOT NULL,
     `room_id` INTEGER NOT NULL,
-    `start_date` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `end_date` DATETIME(3) NULL,
+    `start_date` DATE NOT NULL,
+    `end_date` DATE NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `personnel` INTEGER NOT NULL,
     `by_car` BOOLEAN NOT NULL DEFAULT false,
-    `policy_agreed` BOOLEAN NOT NULL,
+    `policy_agreed` BOOLEAN NOT NULL DEFAULT true,
     `total_price` DECIMAL(8, 0) NOT NULL,
-    `is_adult` TINYINT NOT NULL,
+    `is_adult` BOOLEAN NOT NULL DEFAULT true,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -151,8 +151,8 @@ CREATE TABLE `reviews` (
     `reservation_id` INTEGER NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NULL,
-    `deleted_at` DATETIME(3) NOT NULL,
-    `is_deleted` TINYINT NOT NULL,
+    `deleted_at` DATETIME(3) NULL,
+    `is_deleted` BOOLEAN NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -172,22 +172,13 @@ CREATE TABLE `users` (
     `nickname` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
     `phone_number` VARCHAR(191) NOT NULL,
-    `social_id` VARCHAR(191) NOT NULL,
-    `policy_agreed` BOOLEAN NOT NULL,
+    `social_id` VARCHAR(191) NULL,
+    `policy_agreed` BOOLEAN NOT NULL DEFAULT true,
     `birthday` DATE NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NULL,
-    `deleted_at` DATETIME(3) NOT NULL,
-
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `hosts` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `email` VARCHAR(191) NOT NULL,
-    `password` VARCHAR(191) NOT NULL,
-    `accommodation_id` INTEGER NOT NULL,
+    `deleted_at` DATETIME(3) NULL,
+    `is_deleted` BOOLEAN NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -198,8 +189,6 @@ CREATE TABLE `likes` (
     `user_id` INTEGER NOT NULL,
     `accommodation_id` INTEGER NOT NULL,
 
-    UNIQUE INDEX `likes_user_id_key`(`user_id`),
-    UNIQUE INDEX `likes_accommodation_id_key`(`accommodation_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -247,9 +236,6 @@ ALTER TABLE `reviews` ADD CONSTRAINT `reviews_reservation_id_fkey` FOREIGN KEY (
 
 -- AddForeignKey
 ALTER TABLE `review_images` ADD CONSTRAINT `review_images_review_Id_fkey` FOREIGN KEY (`review_Id`) REFERENCES `reviews`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `hosts` ADD CONSTRAINT `hosts_accommodation_id_fkey` FOREIGN KEY (`accommodation_id`) REFERENCES `accommodations`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `likes` ADD CONSTRAINT `likes_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
