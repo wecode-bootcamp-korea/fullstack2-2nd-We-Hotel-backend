@@ -49,9 +49,48 @@ const getLikedAccommodation = async (userId, accommodationId) => {
     ;`;
 };
 
+const getMainSliderAccommodation = async () => {
+  return await prisma.$queryRaw`
+  SELECT
+    a.id,
+    a.name,
+    ai.image_url as url
+  FROM accommodations as a
+  JOIN accommodations_images as ai
+  ON a.id = ai.accommodation_id
+  ;`;
+};
+
+const getMainLocationAccommodation = async () => {
+  return await prisma.$queryRaw`
+  SELECT
+    mc.name
+    JSON_ARRAYAGG(
+      JSON_OBJECT(
+        'a.id', ,
+        '.towns_name', ,
+        'a.grade', ,
+        'a.name',
+        't.accommodation_id',
+        'image_url',
+        'price',
+        'percentage'
+      )
+    ) 
+  FROM main_categories as mc
+  JOIN accommodations as a 
+  ON   mc.id
+  JOIN town as t
+  ON 
+  JOIN accommodations_images as ai
+  ON
+  ;`;
+}
 
 export default {
   getAccommodationList,
   getAccommodationImage,
-  getLikedAccommodation
+  getLikedAccommodation,
+  getMainSliderAccommodation,
+  getMainLocationAccommodation
 }
