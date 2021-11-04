@@ -11,6 +11,6 @@ router.use('/review', reviewRouter);
 // router.use('/user', userRouter);
 router.use('/category', categoryRouter);
 // router.use('/room', roomRouter);
-// router.use('/accommodation', accommodationRouter);
+router.use('/accommodation', accommodationRouter);
 
 export default router;
