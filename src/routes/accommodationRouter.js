@@ -3,6 +3,7 @@ import { accommodationController } from '../controllers';
 
 const router = express.Router();
 
-router.get('/list', accommodationController.getAccommodationList);
+
+router.get('/', accommodationController.getAccommodationList);
 
 export default router;
