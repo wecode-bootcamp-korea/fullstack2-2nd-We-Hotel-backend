@@ -3,8 +3,7 @@ import { accommodationController } from '../controllers';
 
 const router = express.Router();
 
-
-router.get('/', accommodationController.getAccommodationList);
-router.get('/slider', accommodationController.getMainPageAccommodation)
+router.get('/:depth/:id', accommodationController.getAccommodationList);
+router.get('/slider', accommodationController.getMainPageAccommodation);
 
 export default router;
