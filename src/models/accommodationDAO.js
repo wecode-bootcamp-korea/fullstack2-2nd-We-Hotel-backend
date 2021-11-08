@@ -15,15 +15,26 @@ const getAccommodationList = async (depth, id) => {
 
   `;
   return await prisma.$queryRaw`
-  SELECT
+  SELECT DISTINCT
         a.id,
         a.grade,
         a.name as accommodationName,
         a.detail_address as detailAddress,
-        a.town_id as townId
-        
+        a.town_id as townId,
+        JSON_ARRAYAGG(
+          JSON_OBJECT(
+            r.price,
+            dt.percentage type
+            dt.type
+          ) 
+        ) 
   FROM  accommodations as a
-  
+  JOIN  rooms as r
+  ON    a.id = r.accommodation_id
+  JOIN  room_discounted_types as rdt
+  ON    rdt.room_id = r.id
+  JOIN  discounted_types as dt
+  ON    dt.id = rdt.discounted_type_id
   JOIN sub_categories as s
   ON a.sub_category_id = s.id
   JOIN  main_categories as m
@@ -97,29 +108,62 @@ const getMainSliderAccommodation = async () => {
 const getMainLocationAccommodation = async () => {
   return await prisma.$queryRaw`
   SELECT
-    mc.name
+    mc.name,
     JSON_ARRAYAGG(
       JSON_OBJECT(
-        'a.id', ,
-        '.towns_name', ,
-        'a.grade', ,
-        'a.name',
-        't.accommodation_id',
-        'image_url',
-        'price',
-        'percentage'
+        'id', a.id,
+        'towns_name', a.detail_address,
+        'grade', a.grade,
+        'accommodation', a.name,
+        'accommodation_id', a.id,
+        'image_url', ai.image_url,
+        'price', r.price
       )
     ) 
   FROM main_categories as mc
-  JOIN accommodations as a 
-  ON   mc.id
-  JOIN town as t
-  ON 
+  JOIN sub_categories as sc
+  ON   mc.id = sc.main_category_id
+  JOIN accommodations as a
+  ON a.id = a.sub_category_id
   JOIN accommodations_images as ai
-  ON
+  ON ai.id = ai.accommodation_id
+  JOIN rooms as r
+  ON r.id = r.accommodation_id
+  JOIN room_discounted_types as rdt
+  ON rdt.id = rdt.room_id
+  JOIN discounted_types as dt
+  ON dt.id = dt.room_discounted_types
+  GROUP BY mc.id
   ;`;
 };
-
+// SELECT
+//     mc.name,
+//     JSON_ARRAYAGG(
+//       JSON_OBJECT(
+//         'id', a.id,
+//         'towns_name', a.detail_address,
+//         'grade', a.grade,
+//         'accommodation', a.name,
+//         'accommodation_id', a.id,
+//         'image_url', ai.image_url,
+//         'price', r.price,
+//         'percentage', dt.percentage
+//       )
+//     ) 
+//   FROM main_categories as mc
+//   JOIN sub_categories as sc
+//   ON   mc.id = sc.main_categories_id
+//   JOIN accommodations as a
+//   ON a.id = a.sub_categories_id
+//   JOIN accommodations_images as ai
+//   ON ai.id = ai.accommodation_id
+//   JOIN rooms as r
+//   ON r.id = r.accommodation_id
+//   JOIN room_discounted_types as rdt
+//   ON rdt.id = rdt.room_id
+//   JOIN discounted_types as dt
+//   ON dt.id = dt.room_discounted_types
+//   ;
 export default {
   getAccommodationList,
   getAccommodationImage,
