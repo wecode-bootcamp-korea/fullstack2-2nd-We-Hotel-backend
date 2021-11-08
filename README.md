@@ -69,3 +69,8 @@
 ---
 
 <img width="1198" alt="스크린샷 2021-11-08 오후 3 09 19" src="https://user-images.githubusercontent.com/88175861/140692525-09a5abfd-9570-4970-9e97-0054ce5228ec.png">
+
+# ⚠️ References
+
+- 본 프로젝트는 팀언들의 학습을 목적으로 <a href="https://www.dailyhotel.com/">위호텔</a>을 참고하여 만들었습니다.
+  이 코드를 활용해 상업적인 이들을 취하거나 무단으로 배포할 경우 법적으로 문제될 수 있습니다.
