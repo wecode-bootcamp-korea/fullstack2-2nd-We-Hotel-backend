@@ -30,8 +30,8 @@ const getRoomImage = async () => {
   return await prisma.$queryRaw`
   SELECT
     ri.id,
-    ri.name as Name,
-    ri.image_url as Url
+    ri.name as name,
+    ri.image_url as url
   FROM
     room_images as ri
   LIMIT 10;`

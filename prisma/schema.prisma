@@ -43,9 +43,9 @@ model Accommodation {
   accommodationImage AccommodationsImage[]
   like               Like[]
   room               Room[]
-
-  town        Town        @relation(fields: [townId], references: [id])
-  subCategory SubCategory @relation(fields: [subCategoryId], references: [id])
+  review             Review[]
+  town               Town                  @relation(fields: [townId], references: [id])
+  subCategory        SubCategory           @relation(fields: [subCategoryId], references: [id])
 
   @@map("accommodations")
 }
@@ -172,19 +172,21 @@ model Guest {
 }
 
 model Review {
-  id            Int       @id @default(autoincrement())
-  scores        Decimal   @db.Decimal(2, 1)
-  reviewContent String    @map("review_content")
-  userId        Int       @map("user_id")
-  reservationId Int       @map("reservation_id")
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime? @map("updated_at")
-  deletedAt     DateTime? @map("deleted_at")
-  isDeleted     Boolean   @default(false) @map("is_deleted")
+  id              Int       @id @default(autoincrement())
+  scores          Decimal   @db.Decimal(2, 1)
+  reviewContent   String    @map("review_content")
+  userId          Int       @map("user_id")
+  reservationId   Int       @map("reservation_id")
+  accommodationId Int       @map("accommodation_id")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime? @map("updated_at")
+  deletedAt       DateTime? @map("deleted_at")
+  isDeleted       Boolean   @default(false) @map("is_deleted")
 
-  reviewImage ReviewImage[]
-  user        User          @relation(fields: [userId], references: [id])
-  reservation Reservation   @relation(fields: [reservationId], references: [id])
+  reviewImage   ReviewImage[]
+  user          User          @relation(fields: [userId], references: [id])
+  reservation   Reservation   @relation(fields: [reservationId], references: [id])
+  accommodation Accommodation @relation(fields: [accommodationId], references: [id])
   @@map("reviews")
 }
 
